@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env
+.env.*
+.idea
+.settings
+.project
+.classpath
+.vscode
+*.log
+target/*
+!target/usuario-jdbc-0.0.1-SNAPSHOT.jar
