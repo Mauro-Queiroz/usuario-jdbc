@@ -133,21 +133,114 @@ Parâmetros:
 
 A resposta contém os registros da página e informações de paginação, como total de elementos e total de páginas.
 
-### Exemplos de consulta
+### Exemplos de requisições
 
-Listar funcionários:
+#### 1. Listar funcionários — GET
 
-```
+```bash
 curl http://localhost:8080/employees
 ```
 
-Consultar funcionário:
+Consulta com paginação:
+
+```
+curl "http://localhost:8080/employees?page=0&size=10"
+```
+
+#### 2. Consultar funcionário por ID — GET
 
 ```
 curl http://localhost:8080/employees/10016
 ```
 
-Consultar módulos:
+#### 3. Cadastrar funcionário — POST
+
+O endpoint permite cadastrar o funcionário e, opcionalmente, associar contatos e módulos existentes.
+
+Exemplo de corpo JSON:
+
+```
+{
+  "name": "João da Silva",
+  "salary": 4500.00,
+  "birthday": "1990-05-20T00:00:00-03:00",
+  "contacts": [
+    {
+      "description": "(51) 99999-9999",
+      "type": "telefone"
+    },
+    {
+      "description": "joao@email.com",
+      "type": "email"
+    }
+  ],
+  "modules": [
+    {
+      "id": 1
+    }
+  ]
+}
+```
+
+Envio da requisição:
+
+```
+curl -X POST http://localhost:8080/employees \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "João da Silva",
+    "salary": 4500.00,
+    "birthday": "1990-05-20T00:00:00-03:00",
+    "contacts": [
+      {
+        "description": "(51) 99999-9999",
+        "type": "telefone"
+      },
+      {
+        "description": "joao@email.com",
+        "type": "email"
+      }
+    ],
+    "modules": [
+      {
+        "id": 1
+      }
+    ]
+  }'
+```
+
+**Observações:**
+
+- O ID do funcionário é gerado automaticamente pelo MySQL.
+- O ID `1` é ilustrativo. Consulte `GET /modules` e utilize um ID de módulo existente.
+- A data de nascimento deve seguir o formato ISO 8601, incluindo o deslocamento de fuso horário.
+- Contatos e módulos são opcionais no cadastro.
+
+#### 4. Atualizar funcionário — PUT
+
+O ID do funcionário é informado na URL. O corpo da requisição contém os dados principais que serão atualizados.
+
+```
+curl -X PUT http://localhost:8080/employees/10016 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "João da Silva Atualizado",
+    "salary": 5200.00,
+    "birthday": "1990-05-20T00:00:00-03:00"
+  }'
+```
+
+**Observação:** a implementação atual do PUT atualiza somente nome, salário e data de nascimento. Os contatos e as associações com módulos não são modificados por essa operação.
+
+#### 5. Excluir funcionário — DELETE
+
+```
+curl -X DELETE http://localhost:8080/employees/10016
+```
+
+A exclusão também remove os contatos e as associações com módulos vinculados ao funcionário.
+
+#### 6. Consultar módulos — GET
 
 ```
 curl http://localhost:8080/modules
